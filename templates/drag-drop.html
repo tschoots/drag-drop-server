@@ -5,7 +5,8 @@
 <script>
   
   // Initialize WebSocket connection
-  var wsUrl = "ws://echo.websocket.org/echo";
+  var wsUrl = "ws://{{.Host}}/upload";
+  //var wsUrl = "ws://echo.websocket.org/echo";
   var ws = new WebSocket(wsUrl);
 
   ws.onopen = function() {
@@ -51,12 +52,16 @@
 
 
   // Read binary file contents and send them over WebSocket
-  funtion handleFileDrop(file) {
+  function handleFileDrop(file) {
     var reader = new FileReader();
     reader.readAsArrayBuffer(file);
     reader.onload = function() {
       console.log("sending: " + file.name);
+      console.log("type : " + file.type);
+      console.log("size : " + file.size);
+      ws.send("file:" + file.name);
       ws.send(reader.result);
+      ws.send("stop");
     }
   }
 </script>
